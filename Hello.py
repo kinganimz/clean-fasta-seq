@@ -19,20 +19,38 @@ from io import BytesIO
 
 LOGGER = get_logger(__name__)
 
-def remove_spaces_and_newlines(docx_stream):
-    doc = Document(docx_stream)
-    combined_text = ''.join([paragraph.text.strip() for paragraph in doc.paragraphs])
-    return combined_text
+def process_fasta(fasta_content):
+    lines = fasta_content.splitlines()
+    new_lines = []
+    
+    sequence = ""
+
+    for line in lines:
+        if line.startswith(">"):
+            if sequence:
+                new_lines.append(sequence)
+                sequence = ""
+            new_lines.append(line.strip())
+        else:
+
+            sequence += line.strip()
+
+
+    if sequence:
+        new_lines.append(sequence)
+    
+    return "\n".join(new_lines)
 
 st.title("Clear your fasta file!")
 
-uploaded_file = st.file_uploader("Upload you file in .docx format", type=["docx"])
+uploaded_file = st.file_uploader("Wybierz plik FASTA", type=["txt"])
 
 if uploaded_file is not None:
-    result = remove_spaces_and_newlines(uploaded_file)
+    fasta_content = uploaded_file.read().decode()
+    result = process_fasta(fasta_content)
 
     file_format = st.radio("Choose your output format:", ["txt", "docx"])
-    
+
     if file_format == "txt":
         if st.button('Download your prepared file in .txt'):
             b_stream = BytesIO()
@@ -58,3 +76,4 @@ if uploaded_file is not None:
 
 else:
     st.markdown('Upload your fasta file in .docx format! ')
+    
