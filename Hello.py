@@ -12,40 +12,49 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+
 import streamlit as st
 from streamlit.logger import get_logger
+from docx import Document
+from io import BytesIO
 
 LOGGER = get_logger(__name__)
 
+def remove_spaces_and_newlines(docx_stream):
+    doc = Document(docx_stream)
+    combined_text = ''.join([paragraph.text.strip() for paragraph in doc.paragraphs])
+    return combined_text
 
-def run():
-    st.set_page_config(
-        page_title="Hello",
-        page_icon="👋",
-    )
+st.title("Clear your fasta file!")
 
-    st.write("# Welcome to Streamlit! 👋")
+uploaded_file = st.file_uploader("Upload you file in .docx format", type=["docx"])
 
-    st.sidebar.success("Select a demo above.")
+if uploaded_file is not None:
+    result = remove_spaces_and_newlines(uploaded_file)
 
-    st.markdown(
-        """
-        Streamlit is an open-source app framework built specifically for
-        Machine Learning and Data Science projects.
-        **👈 Select a demo from the sidebar** to see some examples
-        of what Streamlit can do!
-        ### Want to learn more?
-        - Check out [streamlit.io](https://streamlit.io)
-        - Jump into our [documentation](https://docs.streamlit.io)
-        - Ask a question in our [community
-          forums](https://discuss.streamlit.io)
-        ### See more complex demos
-        - Use a neural net to [analyze the Udacity Self-driving Car Image
-          Dataset](https://github.com/streamlit/demo-self-driving)
-        - Explore a [New York City rideshare dataset](https://github.com/streamlit/demo-uber-nyc-pickups)
-    """
-    )
-
-
-if __name__ == "__main__":
-    run()
+    file_format = st.radio("Choose your output format:", ["txt", "docx"])
+    
+    if file_format == "txt":
+        if st.button('Download your prepared file in .txt'):
+            b_stream = BytesIO()
+            b_stream.write(result.encode())
+            st.download_button(
+                label="Download .txt",
+                data=b_stream,
+                file_name="clean_fasta.txt",
+                mime="text/plain"
+            )
+    else:
+        if st.button('Download your prepared file in .docx'):
+            b_stream = BytesIO()
+            new_doc = Document()
+            new_doc.add_paragraph(result)
+            new_doc.save(b_stream)
+            st.download_button(
+                label="Download .docx",
+                data=b_stream,
+                file_name="clean_fasta.docx",
+                mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+            )
+else:
+    st.markdown('Upload your fasta file in .docx format! ')
