@@ -12,7 +12,6 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-
 import streamlit as st
 from streamlit.logger import get_logger
 from docx import Document
@@ -56,5 +55,6 @@ if uploaded_file is not None:
                 file_name="clean_fasta.docx",
                 mime="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
             )
+
 else:
     st.markdown('Upload your fasta file in .docx format! ')
