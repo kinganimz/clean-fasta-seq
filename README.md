@@ -1,7 +1,9 @@
-# Welcome to streamlit
+# Clear your fasta file from enters!
 
-This is the app you get when you run `streamlit hello`, extracted as its own app.
+It's super easy! Just put your sequence in FASTA saved in .docx file and download your the cleanest file you've ever seen!
 
-Edit [Hello.py](./Hello.py) to customize this app to your heart's desire. ❤️
+You're welcome :) 
 
-Check it out on [Streamlit Community Cloud](https://clean-fasta-seq.streamlit.app/)
+This app was created by using `streamlit`.
+
+Just click it! [Streamlit Community Cloud](https://clean-fasta-seq.streamlit.app/)
