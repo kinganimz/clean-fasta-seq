@@ -21,30 +21,30 @@ LOGGER = get_logger(__name__)
 
 def process_fasta(fasta_content):
     lines = fasta_content.splitlines()
-    new_lines = []
-    sequence = ""
+    new_content = []
 
+    sequence = ""
     for line in lines:
         if line.startswith(">"):
             if sequence:
-                new_lines.append(sequence)
+                new_content.append(sequence)
                 sequence = ""
-            new_lines.append(line.strip())
+            new_content.append(line)
         else:
             sequence += line.strip()
 
     if sequence:
-        new_lines.append(sequence)
+        new_content.append(sequence)
 
-    return "\n".join(new_lines)
+    return "\n".join(new_content)
 
 def read_docx(file_stream):
     doc = Document(file_stream)
     return "\n".join([paragraph.text for paragraph in doc.paragraphs])
 
-st.title("Przetwarzanie pliku FASTA")
+st.title("Clear your fasta file!")
 
-uploaded_file = st.file_uploader("Wybierz plik FASTA", type=["docx"])
+uploaded_file = st.file_uploader("Upload your file in docx format!", type=["docx"])
 
 if uploaded_file is not None:
     docx_content = read_docx(uploaded_file)
@@ -76,5 +76,5 @@ if uploaded_file is not None:
             )
 
 else:
-    st.markdown('Upload your fasta file in .docx format! ')
+    st.markdown(' ')
     
